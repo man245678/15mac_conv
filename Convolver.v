@@ -79,9 +79,11 @@ module Convolver
     localparam CLEAR_PSUM    = 4'd7;
     localparam READ_SLOT     = 4'd8;
     localparam COMPUTE       = 4'd9;
-    localparam ACCUMULATE    = 4'd10;
-    localparam WRITE_FEATURE = 4'd11;
-    localparam DONE          = 4'd12;
+    localparam SUM_PARTIAL   = 4'd10;
+    localparam SUM_FINAL     = 4'd11;
+    localparam ACCUMULATE    = 4'd12;
+    localparam WRITE_FEATURE = 4'd13;
+    localparam DONE          = 4'd14;
 
     reg [3:0] cur_state, next_state;
     reg [6:0] cur_filter_idx, next_filter_idx;
@@ -378,6 +380,12 @@ module Convolver
                 next_state = COMPUTE;
             end
             COMPUTE: begin
+                next_state = SUM_PARTIAL;
+            end
+            SUM_PARTIAL: begin
+                next_state = SUM_FINAL;
+            end
+            SUM_FINAL: begin
                 next_state = ACCUMULATE;
             end
             ACCUMULATE: begin
