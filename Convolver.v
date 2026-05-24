@@ -132,7 +132,7 @@ module Convolver
         end
     end
 
-    always @ (posedge clk or negedge resetn) begin
+    always @ (negedge clk or negedge resetn) begin
         if(!resetn) begin
             ifmap_buf1 <= 0;   ifmap_buf2 <= 0;   ifmap_buf3 <= 0;   ifmap_buf4 <= 0;   ifmap_buf5 <= 0;
             ifmap_buf6 <= 0;   ifmap_buf7 <= 0;   ifmap_buf8 <= 0;   ifmap_buf9 <= 0;   ifmap_buf10 <= 0;
@@ -141,7 +141,8 @@ module Convolver
             filter_buf6 <= 0;  filter_buf7 <= 0;  filter_buf8 <= 0;  filter_buf9 <= 0;  filter_buf10 <= 0;
             filter_buf11 <= 0; filter_buf12 <= 0; filter_buf13 <= 0; filter_buf14 <= 0; filter_buf15 <= 0;
         end
-        else if(cur_state == STORE_DATA) begin
+        else if((cur_state == WAIT_DATA || cur_state == STORE_DATA) &&
+                IMAGE_RAM_DATA_VAL && FILTER_RAM_DATA_VAL) begin
             case(cur_lane)
                 4'd0:  begin ifmap_buf1 <= IMAGE_RAM_DIN;  filter_buf1 <= FILTER_RAM_DIN;  end
                 4'd1:  begin ifmap_buf2 <= IMAGE_RAM_DIN;  filter_buf2 <= FILTER_RAM_DIN;  end
